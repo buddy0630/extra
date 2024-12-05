@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witch</title>
+</head>
+
+<body>
+    <div>
+        <h1>Fortune teller</h1>
+        <h2>only yes/no equations</h2>
+        <form id="ask-form">
+            <div>
+                <input placeholder="Enter a secret..." required>
+            </div>
+            <button type="submit">Ask</button>
+        </form>
+    </div>
+    <div id="response-container" style="margin-top: 20px;"></div>
+
+    <script>
+    
+        const form = document.getElementById('ask-form');
+        const responseContainer = document.getElementById('response-container');
+
+    
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            
+            fetch('https://yesno.wtf/api')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('API request failed');
+                    }
+                })
+                .then(data => {
+                    
+                    responseContainer.innerHTML = `
+                        <p style="font-size: 1.5em;">Answer: ${data.answer.toUpperCase()}</p>
+                        <img src="${data.image}" alt="${data.answer}" style="max-width: 100%; height: auto;">
+                    `;
+                })
+                .catch(error => {
+                    
+                    responseContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+
+</html>
